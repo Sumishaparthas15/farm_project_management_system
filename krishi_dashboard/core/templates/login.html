@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: email, password: password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Login Successful!");
+                localStorage.setItem('token', data.token); 
+                console.log("User Info:", data.user);
+                window.location.href = "/dashboard/"; 
+            } else {
+                alert(data.non_field_errors ? data.non_field_errors[0] : "Login failed!");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Login</h2>
+    <form onsubmit="handleLogin(event)">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'register_form' %}"><button type="button">Register</button></a></p>
+
+    
+</body>
+</html>

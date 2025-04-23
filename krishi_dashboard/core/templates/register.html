@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+
+    <!-- Form for registration -->
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="email" name="email" required><br>
+    
+        <label for="username">Username:</label>
+        <input type="text" name="username" required><br>
+    
+        <label for="role">Role:</label>
+        <select name="role" required>
+            <option value="Farm Manager">Farm Manager</option>
+            <option value="Field Worker">Field Worker</option>
+        </select><br>
+    
+        <label for="password">Password:</label>
+        <input type="password" name="password" required><br>
+    
+        <button type="submit">Register</button>
+    </form>
+    
+
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+</body>
+</html>
