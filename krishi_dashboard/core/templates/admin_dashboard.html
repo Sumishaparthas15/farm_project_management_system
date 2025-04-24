@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Add Farm</h2>
+    <form method="post" action="{% url 'manage_data' %}">
+      {% csrf_token %}
+      <input type="hidden" name="form_type" value="farm">
+      <input type="text" name="name" placeholder="Farm Name" required>
+      <button type="submit">Add Farm</button>
+    </form>
+    
+    <h2>Add Field</h2>
+    <form method="post" action="{% url 'manage_data' %}">
+      {% csrf_token %}
+      <input type="hidden" name="form_type" value="field">
+      <select name="farm_id" required>
+        {% for farm in farms %}
+          <option value="{{ farm.id }}">{{ farm.name }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" name="name" placeholder="Field Name" required>
+      <button type="submit">Add Field</button>
+    </form>
+    
+    <h2>Add Crop</h2>
+    <form method="post" action="{% url 'manage_data' %}">
+      {% csrf_token %}
+      <input type="hidden" name="form_type" value="crop">
+      <select name="field_id" required>
+        {% for field in fields %}
+          <option value="{{ field.id }}">{{ field.name }} ({{ field.farm.name }})</option>
+        {% endfor %}
+      </select>
+      <input type="text" name="name" placeholder="Crop Name" required>
+      <input type="date" name="harvest_date" required>
+      <button type="submit">Add Crop</button>
+    </form>
+    
+
+</body>
+</html>

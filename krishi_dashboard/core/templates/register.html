@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h2>Register</h2>
-
-    <!-- Form for registration -->
-    <form method="POST" action="{% url 'register' %}">
+    <form id="registerForm">
         {% csrf_token %}
         <label for="email">Email:</label>
         <input type="email" name="email" required><br>
@@ -19,8 +19,8 @@
     
         <label for="role">Role:</label>
         <select name="role" required>
-            <option value="Farm Manager">Farm Manager</option>
-            <option value="Field Worker">Field Worker</option>
+            <option value="farm_manager">Farm Manager</option>
+            <option value="field_worker">Field Worker</option>
         </select><br>
     
         <label for="password">Password:</label>
@@ -28,8 +28,34 @@
     
         <button type="submit">Register</button>
     </form>
-    
 
     <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+
+    <script>
+        $(document).ready(function () {
+            $('#registerForm').on('submit', function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "register" %}',
+                    data: $(this).serialize(),
+                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                    success: function () {
+                        alert('Registration successful! Redirecting to login...');
+                        window.location.href = '{% url "home" %}';
+                    },
+                    error: function (xhr) {
+                        let errors = JSON.parse(xhr.responseText);
+                        let errorMessages = '';
+                        for (let key in errors) {
+                            errorMessages += `${key}: ${errors[key]}\n`;
+                        }
+                        alert('Registration failed:\n' + errorMessages);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

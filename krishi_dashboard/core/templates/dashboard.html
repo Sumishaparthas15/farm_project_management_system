@@ -1,1 +1,107 @@
-Hello
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 40px;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card img {
+      width: 100%;
+      height: 60%;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 15px 20px;
+      text-align: center;
+    }
+
+    .card-body h3 {
+      margin: 10px 0 5px;
+      color: #444;
+    }
+
+    .card-body p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #008080;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Farm Management Dashboard</h1>
+
+  <div class="card-container">
+    <!-- Farm Card -->
+    <div class="card">
+        <img src="{% static 'img/farms.jpg' %}" alt="Farm">
+      <div class="card-body">
+        <h3>Farms</h3>
+        <p>{{ total_farms }}</p>
+      </div>
+    </div>
+
+    <!-- Field Card -->
+    <div class="card">
+        <img src="{% static 'img/fields.jpg' %}" alt="Farm">
+      <div class="card-body">
+        <h3>Fields</h3>
+        <p>{{ total_fields }}</p>
+      </div>
+    </div>
+
+    <!-- Crop Card -->
+    <div class="card">
+        <img src="{% static 'img/crops.jpg' %}" alt="Farm">
+      <div class="card-body">
+        <h3>Crops</h3>
+        <p>{{ total_crops }}</p>
+      </div>
+    </div>
+
+     <!-- Project Card  -->
+    
+    <div class="card">
+        <img src="{% static 'img/projects.jpg' %}" alt="Farm">
+      <div class="card-body">
+        <h3>Active Projects</h3>
+        <p>{{ total_active_projects }}</p>
+      </div>
+    </div>
+    
+  </div>
+</body>
+</html>
