@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f4f8;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .main-wrapper {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+    }
+
+    /* Left Section (All Projects) */
+    .projects-section {
+      flex: 0 0 70%;
+    }
+
+    .projects-section h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .Pending { background-color: #ffc107; }
+    .InProgress { background-color: #007bff; }
+    .Completed { background-color: #28a745; }
+
+    /* Right Section (Form) */
+    .form-section {
+      flex: 0 0 30%;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-section h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    form label {
+      margin-top: 15px;
+      display: block;
+      color: #333;
+      font-weight: 500;
+    }
+
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    form button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    form button:hover {
+      background-color: #218838;
+    }
+
+    .success, .error {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+
+<body>
+  
+<div class="main-wrapper">
+
+  <!-- Left Column: All Projects -->
+  <div class="projects-section">
+    <h2>All Projects</h2>
+    <div class="container">
+      {% for project in projects %}
+        <div class="card">
+          <h3>{{ project.title }}</h3>
+          <p><strong>Deadline:</strong> {{ project.deadline }}</p>
+          <p><strong>Description:</strong> {{ project.description|truncatechars:100 }}</p>
+          <p><strong>Assigned To:</strong> {{ project.assigned_to.username }}</p>
+          <p>
+            <span class="badge {{ project.status|cut:" " }}">{{ project.status }}</span>
+
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Right Column: Add New Project Form -->
+  <div class="form-section">
+    <h2>Add New Project</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="success">{{ message }}</div>
+        <script>alert("{{ message }}");</>
+      {% endfor %}
+    {% endif %}
+
+    {% if form_errors %}
+      <div class="error">
+        <ul>
+          {% for error in form_errors %}
+            <li>{{ error }}</li>
+            <script>alert("{{ error }}");</script>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'add_project' %}">
+      {% csrf_token %}
+      <label>Title:</label>
+      <input type="text" name="title" required>
+
+      <label>Description:</label>
+      <textarea name="description" rows="3" required></textarea>
+
+      <label>Deadline:</label>
+      <input type="date" name="deadline" required>
+
+      <label>Assign Farm:</label>
+      <select name="farm_id" required>
+        <option value="">-- Select Farm --</option>
+        {% for farm in farms %}
+          <option value="{{ farm.id }}">{{ farm.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Assign Field:</label>
+      <select name="field_id" required>
+        <option value="">-- Select Field --</option>
+        {% for field in fields %}
+          <option value="{{ field.id }}">{{ field.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Assign To (User):</label>
+      <select name="assigned_to" required>
+        <option value="">-- Select User --</option>
+        {% for user in users %}
+          <option value="{{ user.id }}">{{ user.username }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Status:</label>
+      <select name="status" required>
+        <option value="">-- Select Status --</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+
+      <button type="submit">Create Project</button>
+    </form>
+  </div>
+
+</div>
+
+</body>
+</html>

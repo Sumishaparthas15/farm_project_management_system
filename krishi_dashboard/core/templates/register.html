@@ -2,60 +2,188 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
     <!-- jQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #4e73df;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2e59d9;
+        }
+
+        /* Registration Link */
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .register-link a {
+            text-decoration: none;
+            color: #4e73df;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error/Sucess message */
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
+
+  <div class="form-container">
     <h2>Register</h2>
+
+    <!-- Success/Error Message (optional) -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="message success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% if form_errors %}
+      <div class="message error">
+        <ul>
+          {% for error in form_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
     <form id="registerForm">
-        {% csrf_token %}
-        <label for="email">Email:</label>
-        <input type="email" name="email" required><br>
-    
-        <label for="username">Username:</label>
-        <input type="text" name="username" required><br>
-    
-        <label for="role">Role:</label>
-        <select name="role" required>
-            <option value="farm_manager">Farm Manager</option>
-            <option value="field_worker">Field Worker</option>
-        </select><br>
-    
-        <label for="password">Password:</label>
-        <input type="password" name="password" required><br>
-    
-        <button type="submit">Register</button>
+      {% csrf_token %}
+
+      <label for="email">Email:</label>
+      <input type="email" name="email" required>
+
+      <label for="username">Username:</label>
+      <input type="text" name="username" required>
+
+      <label for="role">Role:</label>
+      <select name="role" required>
+        <option value="farm_manager">Farm Manager</option>
+        <option value="field_worker">Field Worker</option>
+      </select>
+
+      <label for="password">Password:</label>
+      <input type="password" name="password" required>
+
+      <button type="submit">Register</button>
     </form>
 
-    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    <div class="register-link">
+      <p>Already have an account? <a href="{% url 'home' %}">Login here</a></p>
+    </div>
+  </div>
 
-    <script>
-        $(document).ready(function () {
-            $('#registerForm').on('submit', function (e) {
-                e.preventDefault();
+  <script>
+    $(document).ready(function () {
+      $('#registerForm').on('submit', function (e) {
+        e.preventDefault();
 
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "register" %}',
-                    data: $(this).serialize(),
-                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
-                    success: function () {
-                        alert('Registration successful! Redirecting to login...');
-                        window.location.href = '{% url "home" %}';
-                    },
-                    error: function (xhr) {
-                        let errors = JSON.parse(xhr.responseText);
-                        let errorMessages = '';
-                        for (let key in errors) {
-                            errorMessages += `${key}: ${errors[key]}\n`;
-                        }
-                        alert('Registration failed:\n' + errorMessages);
-                    }
-                });
-            });
+        $.ajax({
+          type: 'POST',
+          url: '{% url "register" %}',
+          data: $(this).serialize(),
+          headers: {'X-CSRFToken': '{{ csrf_token }}'},
+          success: function () {
+            alert('Registration successful! Redirecting to login...');
+            window.location.href = '{% url "home" %}';
+          },
+          error: function (xhr) {
+            let errors = JSON.parse(xhr.responseText);
+            let errorMessages = '';
+            for (let key in errors) {
+              errorMessages += `${key}: ${errors[key]}\n`;
+            }
+            alert('Registration failed:\n' + errorMessages);
+          }
         });
-    </script>
+      });
+    });
+  </script>
+
 </body>
 </html>

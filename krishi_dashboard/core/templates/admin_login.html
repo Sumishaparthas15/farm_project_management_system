@@ -1,24 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4e73df;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2e59d9;
+        }
+
+        /* Error/Sucess message */
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
+
+  <div class="form-container">
     <h2>Superuser Login</h2>
+
+    <!-- Success/Error Message -->
     {% if messages %}
-        {% for message in messages %}
-            <p style="color:red;">{{ message }}</p>
-        {% endfor %}
+      {% for message in messages %}
+        <div class="message error">{{ message }}</div>
+      {% endfor %}
     {% endif %}
+
     <form method="POST">
-        {% csrf_token %}
-        <label>Email:</label>
-        <input type="email" name="email" required><br><br>
+      {% csrf_token %}
 
-        <label>Password:</label>
-        <input type="password" name="password" required><br><br>
+      <label for="email">Email:</label>
+      <input type="email" name="email" required>
 
-        <button type="submit">Login</button>
+      <label for="password">Password:</label>
+      <input type="password" name="password" required>
+
+      <button type="submit">Login</button>
     </form>
+  </div>
+
 </body>
 </html>

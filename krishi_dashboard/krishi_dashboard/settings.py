@@ -87,8 +87,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.CustomUser'
 AUTHENTICATION_BACKENDS = [
-    'core.auth_backend.EmailAuthBackend',  # Your custom backend
-    'django.contrib.auth.backends.ModelBackend',  # Optional fallback to the default backend
+    'core.auth_backend.EmailAuthBackend',  
+    'django.contrib.auth.backends.ModelBackend',  
 ]
 
+
+# settings.py
+LOGIN_URL = 'home'  # Replace 'home' with the name of your home URL or '/home/' if you use a hard-coded URL
+# settings.py
 

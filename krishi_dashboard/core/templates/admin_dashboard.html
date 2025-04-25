@@ -3,44 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Manage Farm Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select {
+            width: calc(100% - 22px);
+        }
+
+        .alert {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Add some spacing between forms */
+        form + form {
+            margin-top: 30px;
+        }
+        button {
+            background-color: #FF5733;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button:hover {
+            background-color: #e04e1b;
+        }
+    </style>
 </head>
 <body>
-    <h2>Add Farm</h2>
-    <form method="post" action="{% url 'manage_data' %}">
-      {% csrf_token %}
-      <input type="hidden" name="form_type" value="farm">
-      <input type="text" name="name" placeholder="Farm Name" required>
-      <button type="submit">Add Farm</button>
-    </form>
-    
-    <h2>Add Field</h2>
-    <form method="post" action="{% url 'manage_data' %}">
-      {% csrf_token %}
-      <input type="hidden" name="form_type" value="field">
-      <select name="farm_id" required>
-        {% for farm in farms %}
-          <option value="{{ farm.id }}">{{ farm.name }}</option>
-        {% endfor %}
-      </select>
-      <input type="text" name="name" placeholder="Field Name" required>
-      <button type="submit">Add Field</button>
-    </form>
-    
-    <h2>Add Crop</h2>
-    <form method="post" action="{% url 'manage_data' %}">
-      {% csrf_token %}
-      <input type="hidden" name="form_type" value="crop">
-      <select name="field_id" required>
-        {% for field in fields %}
-          <option value="{{ field.id }}">{{ field.name }} ({{ field.farm.name }})</option>
-        {% endfor %}
-      </select>
-      <input type="text" name="name" placeholder="Crop Name" required>
-      <input type="date" name="harvest_date" required>
-      <button type="submit">Add Crop</button>
-    </form>
-    
 
+    <div class="container">
+      
+        <h2>Add Farm</h2>
+        <form method="post" action="{% url 'manage_data' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="farm_name">Farm Name</label>
+                <input type="text" id="farm_name" name="name" placeholder="Enter Farm Name" required>
+            </div>
+            <input type="hidden" name="form_type" value="farm">
+            <button type="submit">Add Farm</button>
+        </form>
+        
+        <h2>Add Field</h2>
+        <form method="post" action="{% url 'manage_data' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="farm_select">Select Farm</label>
+                <select name="farm_id" id="farm_select" required>
+                    {% for farm in farms %}
+                        <option value="{{ farm.id }}">{{ farm.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="field_name">Field Name</label>
+                <input type="text" id="field_name" name="name" placeholder="Enter Field Name" required>
+            </div>
+            <input type="hidden" name="form_type" value="field">
+            <button type="submit">Add Field</button>
+        </form>
+        
+        <h2>Add Crop</h2>
+        <form method="post" action="{% url 'manage_data' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="field_select">Select Field</label>
+                <select name="field_id" id="field_select" required>
+                    {% for field in fields %}
+                        <option value="{{ field.id }}">{{ field.name }} ({{ field.farm.name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="crop_name">Crop Name</label>
+                <input type="text" id="crop_name" name="name" placeholder="Enter Crop Name" required>
+            </div>
+            <div class="form-group">
+                <label for="harvest_date">Harvest Date</label>
+                <input type="date" id="harvest_date" name="harvest_date" required>
+            </div>
+            <input type="hidden" name="form_type" value="crop">
+            <button type="submit">Add Crop</button>
+        </form>
+    </div>
 </body>
 </html>

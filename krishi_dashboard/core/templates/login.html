@@ -2,8 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <meta name="csrf-token" content="{{ csrf_token }}">  <!-- CSRF token meta tag -->
+  <meta name="csrf-token" content="{{ csrf_token }}"> <!-- CSRF token meta tag -->
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Form Styles */
+    .form-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+      margin-top: 15px;
+    }
+
+    input {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #4e73df;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #4e73df;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2e59d9;
+    }
+
+    /* Registration Link */
+    .register-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .register-link a {
+      text-decoration: none;
+      color: #4e73df;
+      font-weight: 600;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Error/Sucess message */
+    .message {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
   <script>
     async function handleLogin(event) {
       event.preventDefault();  // Prevent normal form submission
@@ -40,18 +145,42 @@
   </script>
 </head>
 <body>
-  <h2>Login</h2>
-  <form id="loginForm">
-    {% csrf_token %}
-    <input type="email" id="email" name="email" required>
-    <input type="password" id="password" name="password" required>
-    <button type="submit">Login</button>
-  </form>
 
-  <p>Don't have an account? 
-    <a href="{% url 'register_form' %}">
-      <button type="button">Register</button>
-    </a>
-  </p>
+  <div class="form-container">
+    <h2>Login</h2>
+
+    <!-- Success/Error Message (optional) -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="message success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% if form_errors %}
+      <div class="message error">
+        <ul>
+          {% for error in form_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form id="loginForm">
+      {% csrf_token %}
+      
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="register-link">
+      <p>Don't have an account? <a href="{% url 'register_form' %}">Register here</a></p>
+    </div>
+  </div>
+
 </body>
 </html>
